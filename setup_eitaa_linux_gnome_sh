@@ -9,8 +9,24 @@ DESKTOP_FILE_PATH="$HOME/.local/share/applications/eitaa.desktop"
 
 # Create application directory if it doesn't exist
 mkdir -p "$APP_DIR"
-wget https://eitaa.com/app/linux
-tar xvf Eitaa-linux-4.1.6.tar.xz
+#!/bin/bash
+
+counter=0
+basename="linux"
+filename=basename
+while true; do
+    if [ ! -f "$filename" ]; then
+        echo "File '$full_filename' does not exist."
+        break
+    else
+        echo "File '$full_filename' exists."
+        filename="$basename".$counter"
+        counter=$((counter + 1))
+    fi
+done
+
+wget https://eitaa.com/app/linux -P filename
+tar xvf linux
 mv Eitaa "$APP_DIR/eitaa"
 
 # wget -P ~/پیام‌رسان/ایتا/ wget https://eitaa.com/assets/images/logos/site-logo-larg.png
