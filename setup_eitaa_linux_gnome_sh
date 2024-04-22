@@ -1,4 +1,43 @@
+#!/bin/bash
+
+# Define path variables
+APP_DIR="$HOME/پیام‌رسان/ایتا"
+APP_PATH="$APP_DIR/eitaa"
+ICON_URL="https://eitaa.com/assets/images/logos/site-logo-larg.png"
+ICON_PATH="$APP_DIR/site-logo-larg.png"
+DESKTOP_FILE_PATH="$HOME/.local/share/applications/eitaa.desktop"
+
+# Create application directory if it doesn't exist
+mkdir -p "$APP_DIR"
 wget https://eitaa.com/app/linux
 tar xvf Eitaa-linux-4.1.6.tar.xz
-wget https://eitaa.com/assets/images/logos/site-logo-larg.png
-mkdir -p ~/پیام‌رسان/ایتا
+mv Eitaa "$APP_DIR/eitaa"
+
+# wget -P ~/پیام‌رسان/ایتا/ wget https://eitaa.com/assets/images/logos/site-logo-larg.png
+# Download the icon if it doesn't exist
+if [ ! -f "$ICON_PATH" ]; then
+    wget "$ICON_URL" -O "$ICON_PATH"
+fi
+
+# Create the .desktop file
+echo "[Desktop Entry]
+Name=Eitaa
+Comment=Iranian Messenger
+Exec=\"$APP_PATH\"
+Icon=$ICON_PATH
+Type=Application
+Categories=Network;InstantMessaging;
+Terminal=false" > "$DESKTOP_FILE_PATH"
+
+# Make the .desktop file executable
+chmod +x "$DESKTOP_FILE_PATH"
+
+# Make the application executable if it's not already
+if [ ! -x "$APP_PATH" ]; then
+    chmod +x "$APP_PATH"
+fi
+
+# export QT_QPA_PLATFORM=wayland
+# ./eitaa &
+
+echo "Eitaa desktop entry has been created successfully."
