@@ -1,0 +1,4 @@
+wget https://eitaa.com/app/linux
+tar xvf Eitaa-linux-4.1.6.tar.xz
+wget https://eitaa.com/assets/images/logos/site-logo-larg.png
+mkdir -p ~/پیام‌رسان/ایتا
