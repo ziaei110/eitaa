@@ -1,5 +1,19 @@
 #!/bin/bash
 
+# Function to generate filenames in the pattern linux, linux.0, linux.1, ..., linux.n
+generate_filename() {
+    local basename="linux"
+    local counter=0
+    local filename="$basename"
+
+    while [ -e "$filename" ]; do
+        filename="${basename}.$counter"
+        counter=$((counter + 1))
+    done
+
+    echo "$filename"
+}
+
 # Define path variables
 APP_DIR="$HOME/پیام‌رسان/ایتا"
 APP_PATH="$APP_DIR/eitaa"
@@ -9,27 +23,28 @@ DESKTOP_FILE_PATH="$HOME/.local/share/applications/eitaa.desktop"
 
 # Create application directory if it doesn't exist
 mkdir -p "$APP_DIR"
-#!/bin/bash
 
-counter=0
-basename="linux"
-filename=basename
-while true; do
-    if [ ! -f "$filename" ]; then
-        echo "File '$full_filename' does not exist."
-        break
+# Generate a unique filename for the download
+filename=$(generate_filename)
+
+# Download the file and save it with the generated filename
+wget https://eitaa.com/app/linux -O "$filename"
+
+# Check if the downloaded file is a directory
+if [ -d "$filename" ]; then
+    # If it's a directory, assume it's the extracted contents
+    mv "$filename" "$APP_DIR/eitaa"
+else
+    # If it's not a directory, assume it's an archive and extract it
+    tar xvf "$filename" -C "$APP_DIR"
+    # Assuming the extracted directory is named Eitaa, if not, adjust accordingly
+    if [ -d "$APP_DIR/linux" ]; then
+        mv "$APP_DIR/linux" "$APP_DIR/eitaa"
     else
-        echo "File '$full_filename' exists."
-        filename="$basename".$counter"
-        counter=$((counter + 1))
+        mv "$APP_DIR/Eitaa" "$APP_DIR/eitaa"
     fi
-done
+fi
 
-wget https://eitaa.com/app/linux -P filename
-tar xvf linux
-mv Eitaa "$APP_DIR/eitaa"
-
-# wget -P ~/پیام‌رسان/ایتا/ wget https://eitaa.com/assets/images/logos/site-logo-larg.png
 # Download the icon if it doesn't exist
 if [ ! -f "$ICON_PATH" ]; then
     wget "$ICON_URL" -O "$ICON_PATH"
